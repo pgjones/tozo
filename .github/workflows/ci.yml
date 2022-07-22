@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+
+  infrastructure:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Terraform
+        run: |
+          sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update && sudo apt-get install terraform
+
+      - uses: actions/checkout@v3
+
+      - name: Initialise Terraform
+        run: terraform init
+
+      - name: Check the formatting
+        run: terraform fmt --check=true --recursive
+
+      - name: Validate the code
+        run: terraform validate
+
+  backend:
+    runs-on: ubuntu-latest
+
+    container: python:3.10.1-slim-bullseye
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_DB: tozo_test
+          POSTGRES_USER: tozo
+          POSTGRES_PASSWORD: tozo
+          POSTGRES_HOST_AUTH_METHOD: "trust"
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    defaults:
+      run:
+        working-directory: backend
+
+    env:
+      TOZO_QUART_DB_DATABASE_URL: "postgresql://tozo:tozo@postgres:5432/tozo_test"
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install system dependencies
+        run: apt-get update && apt-get install -y postgresql postgresql-contrib
+
+      - name: Initialise dependencies
+        run: |
+          pip install pdm
+          pdm install
+
+      - name: Linting
+        run: pdm run lint
+
+      - name: Testing
+        run: pdm run test
+
+  frontend:
+    runs-on: ubuntu-latest
+
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - uses: actions/checkout@v3
+
+      - name: Initialise dependencies
+        run: npm ci --cache .npm --prefer-offline
+
+      - name: Check formatting
+        run: npm run format
+
+      - name: Linting
+        run: npm run lint
+
+      - name: Testing
+        run: npm run test
+
+      - name: Build
+        run: npm run build
