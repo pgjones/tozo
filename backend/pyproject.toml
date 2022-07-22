@@ -14,6 +14,7 @@ dependencies = [
     "quart-rate-limiter>=0.7.0",
     "pydantic[email]>=1.9.1",
     "quart-schema>=0.12.0",
+    "quart-db>=0.2.0",
 ]
 requires-python = ">=3.10"
 license = {text = "Private"}
@@ -68,4 +69,6 @@ lint-mypy = "mypy src/backend tests"
 lint-vulture = "vulture src"
 lint = {composite = ["lint-bandit", "lint-black", "lint-djhtml", "lint-flake8", "lint-isort", "lint-mypy", "lint-vulture"]}
 start = {cmd = "quart --app src/backend/run.py run --port 5050", env_file = "development.env"}
-test = {cmd = "pytest tests/", env_file = "testing.env"}
+recreate-db-base = "quart --app src/backend/run.py recreate_db"
+recreate-db = {composite = ["recreate-db-base"], env_file = "development.env"}
+test = {composite = ["recreate-db-base", "pytest tests/"], env_file = "testing.env"}
