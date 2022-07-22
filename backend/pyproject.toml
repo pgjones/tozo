@@ -7,6 +7,10 @@ authors = [
 ]
 dependencies = [
     "quart>=0.18.0",
+    "quart-auth>=0.7.0",
+    "bcrypt>=3.2.2",
+    "zxcvbn>=4.4.28",
+    "itsdangerous>=2.1.2",
 ]
 requires-python = ">=3.10"
 license = {text = "Private"}
@@ -30,6 +34,7 @@ dev = [
     "pytest-asyncio>=0.19.0",
     "djhtml>=1.5.2",
     "setuptools>=63.2.0",
+    "freezegun>=1.2.1",
 ]
 
 [tool.black]
