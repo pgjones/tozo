@@ -5,6 +5,9 @@ description = ""
 authors = [
     {name = "Phil Jones", email = "pgjones@tozo.dev"},
 ]
+dependencies = [
+    "quart>=0.18.0",
+]
 requires-python = ">=3.10"
 license = {text = "Private"}
 [project.optional-dependencies]
@@ -56,4 +59,5 @@ lint-isort = "isort --check --diff src tests"
 lint-mypy = "mypy src/backend tests"
 lint-vulture = "vulture src"
 lint = {composite = ["lint-bandit", "lint-black", "lint-djhtml", "lint-flake8", "lint-isort", "lint-mypy", "lint-vulture"]}
+start = "quart --app src/backend/run.py run --port 5050"
 test = "pytest tests/"
