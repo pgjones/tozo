@@ -1,0 +1,6 @@
+.ansible-vault
+secrets.auto.tfvars
+terraform.tfstate
+*.backup
+.terraform.lock.hcl
+.terraform/
