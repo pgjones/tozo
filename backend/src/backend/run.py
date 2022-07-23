@@ -1,3 +1,4 @@
+import logging
 import os
 from subprocess import call  # nosec
 from urllib.parse import urlparse
@@ -10,6 +11,8 @@ from quart_schema import QuartSchema, RequestSchemaValidationError
 
 from backend.blueprints.control import blueprint as control_blueprint
 from backend.lib.api_error import APIError
+
+logging.basicConfig(level=logging.INFO)
 
 app = Quart(__name__)
 app.config.from_prefixed_env(prefix="TOZO")

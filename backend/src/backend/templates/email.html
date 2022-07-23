@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tozo - email</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+
+  <body style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 14px; font-style: normal; margin: 0">
+    <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td align="center">
+          <table height="100%" cellpadding="20" cellspacing="0" border="0" style="max-width: 540px;">
+            <tr>
+              <td align="left" width="540">
+                {% block welcome %}
+                  Hello,
+                {% endblock %}
+              </td>
+            </tr>
+            <tr>
+              <td align="left" width="540">
+                {% block content %}
+                  Example content
+                {% endblock %}
+              </td>
+            </tr>
+            <tr>
+              <td align="center" width="540">
+                The Tozo team
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
