@@ -10,6 +10,7 @@ from quart_rate_limiter import RateLimiter, RateLimitExceeded
 from quart_schema import QuartSchema, RequestSchemaValidationError
 
 from backend.blueprints.control import blueprint as control_blueprint
+from backend.blueprints.members import blueprint as members_blueprint
 from backend.blueprints.sessions import blueprint as sessions_blueprint
 from backend.lib.api_error import APIError
 
@@ -24,6 +25,7 @@ rate_limiter = RateLimiter(app)
 schema = QuartSchema(app, convert_casing=True)
 
 app.register_blueprint(control_blueprint)
+app.register_blueprint(members_blueprint)
 app.register_blueprint(sessions_blueprint)
 
 

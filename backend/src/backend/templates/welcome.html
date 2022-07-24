@@ -1,0 +1,12 @@
+{% extends "email.html" %}
+
+{% block welcome %}
+  Hello and welcome to tozo!
+{% endblock %}
+
+{% block content %}
+  Please confirm you signed up by following this
+  <a href="{{ config['BASE_URL'] }}/confirm-email/{{ token }}/">
+    link
+  </a>.
+{% endblock %}
