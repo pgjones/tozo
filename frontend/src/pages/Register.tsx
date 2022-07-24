@@ -12,7 +12,6 @@ import Title from "src/components/Title";
 import { ToastContext } from "src/ToastContext";
 import { useMutation } from "src/query";
 
-
 interface IForm {
   email: string;
   password: string;
@@ -25,10 +24,7 @@ const useRegister = () => {
     async (data: IForm) => await axios.post("/members/", data),
   );
 
-  return async (
-    data: IForm,
-    { setFieldError }: FormikHelpers<IForm>,
-  ) => {
+  return async (data: IForm, { setFieldError }: FormikHelpers<IForm>) => {
     try {
       await register(data);
       addToast("Registered", "success");
@@ -68,9 +64,7 @@ const Register = () => {
       >
         {({ dirty, isSubmitting, values }) => (
           <Form>
-          <EmailField
-            fullWidth label="Email" name="email" required
-          />
+            <EmailField fullWidth label="Email" name="email" required />
             <LazyPasswordWithStrengthField
               autoComplete="new-password"
               fullWidth
@@ -83,8 +77,16 @@ const Register = () => {
               isSubmitting={isSubmitting}
               label="Register"
               links={[
-                {label: "Login", to: "/login/", state: { email: values.email }},
-                {label: "Reset password", to: "/forgotten-password/", state: { email: values.email }},
+                {
+                  label: "Login",
+                  to: "/login/",
+                  state: { email: values.email },
+                },
+                {
+                  label: "Reset password",
+                  to: "/forgotten-password/",
+                  state: { email: values.email },
+                },
               ]}
             />
           </Form>
