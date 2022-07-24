@@ -7,6 +7,7 @@ import React from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 
 import { AuthContextProvider } from "src/AuthContext";
+import Router from "src/Router";
 import ThemeProvider from "src/ThemeProvider";
 
 const App = () => {
@@ -17,7 +18,9 @@ const App = () => {
           <title>Tozo</title>
         </Helmet>
         <ThemeProvider>
-          <Container maxWidth="md"></Container>
+          <Container maxWidth="md">
+            <Router />
+          </Container>
         </ThemeProvider>
       </HelmetProvider>
     </AuthContextProvider>
