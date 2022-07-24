@@ -6,18 +6,21 @@ import Container from "@mui/material/Container";
 import React from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 
+import { AuthContextProvider } from "src/AuthContext";
 import ThemeProvider from "src/ThemeProvider";
 
 const App = () => {
   return (
-    <HelmetProvider>
-      <Helmet>
-        <title>Tozo</title>
-      </Helmet>
-      <ThemeProvider>
-        <Container maxWidth="md"></Container>
-      </ThemeProvider>
-    </HelmetProvider>
+    <AuthContextProvider>
+      <HelmetProvider>
+        <Helmet>
+          <title>Tozo</title>
+        </Helmet>
+        <ThemeProvider>
+          <Container maxWidth="md"></Container>
+        </ThemeProvider>
+      </HelmetProvider>
+    </AuthContextProvider>
   );
 };
 
