@@ -56,6 +56,10 @@ addopts = "--showlocals"
 asyncio_mode = "auto"
 pythonpath = ["src"]
 
+[[tool.mypy.overrides]]
+module =["h11"]
+ignore_missing_imports = true
+
 [tool.pdm.scripts]
 format-black = "black src/ tests/"
 format-djhtml = "djhtml src/backend/templates -t 2 --in-place"
