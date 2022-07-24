@@ -33,7 +33,12 @@
       "plugin:import/warnings",
       "plugin:import/typescript",
       "prettier"
-    ]
+    ],
+    "settings": {
+      "import/resolver": {
+        "typescript": {}
+      }
+    }
   },
   "browserslist": {
     "production": [
@@ -50,11 +55,13 @@
   "devDependencies": {
     "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^3.3.0",
     "eslint-plugin-import": "^2.26.0",
     "prettier": "^2.7.1",
     "source-map-explorer": "^2.5.2"
   },
   "prettier": {
     "trailingComma": "all"
-  }
+  },
+  "proxy": "http://localhost:5050"
 }
