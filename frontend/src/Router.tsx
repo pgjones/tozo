@@ -5,10 +5,13 @@ import ScrollToTop from "src/components/ScrollToTop";
 import TopBar from "src/components/TopBar";
 import ChangePassword from "src/pages/ChangePassword";
 import ConfirmEmail from "src/pages/ConfirmEmail";
+import CreateTodo from "src/pages/CreateTodo";
+import EditTodo from "src/pages/EditTodo";
 import ForgottenPassword from "src/pages/ForgottenPassword";
 import Login from "src/pages/Login";
 import Register from "src/pages/Register";
 import ResetPassword from "src/pages/ResetPassword";
+import Todos from "src/pages/Todos";
 
 const Router = () => (
   <BrowserRouter>
@@ -28,6 +31,30 @@ const Router = () => (
       />
       <Route path="/forgotten-password/" element={<ForgottenPassword />} />
       <Route path="/reset-password/:token/" element={<ResetPassword />} />
+      <Route
+        path="/"
+        element={
+          <RequireAuth>
+            <Todos />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/todos/new/"
+        element={
+          <RequireAuth>
+            <CreateTodo />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/todos/:id/"
+        element={
+          <RequireAuth>
+            <EditTodo />
+          </RequireAuth>
+        }
+      />
     </Routes>
   </BrowserRouter>
 );
