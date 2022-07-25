@@ -13,6 +13,10 @@ import Register from "src/pages/Register";
 import ResetPassword from "src/pages/ResetPassword";
 import Todos from "src/pages/Todos";
 
+const ThrowError = () => {
+  throw new Error("Test Error");
+};
+
 const Router = () => (
   <BrowserRouter>
     <ScrollToTop />
@@ -55,6 +59,7 @@ const Router = () => (
           </RequireAuth>
         }
       />
+      <Route element={<ThrowError />} path="/test-error/" />
     </Routes>
   </BrowserRouter>
 );
