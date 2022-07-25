@@ -1,16 +1,18 @@
 from dataclasses import dataclass
 from datetime import timedelta
-from typing import cast
+from typing import Literal, cast
 
 import asyncpg  # type: ignore
 import bcrypt
 from disposable_email_domains import blocklist  # type: ignore
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 from pydantic import EmailStr
+from pyotp import random_base32
+from pyotp.totp import TOTP
 from quart import Blueprint, ResponseReturnValue, current_app, g
 from quart_auth import current_user, login_required
 from quart_rate_limiter import rate_limit
-from quart_schema import validate_request
+from quart_schema import validate_request, validate_response
 from zxcvbn import zxcvbn  # type: ignore
 
 from backend.lib.api_error import APIError
@@ -19,8 +21,10 @@ from backend.models.member import (
     insert_member,
     select_member_by_email,
     select_member_by_id,
+    update_last_totp,
     update_member_email_verified,
     update_member_password,
+    update_totp_secret,
 )
 
 blueprint = Blueprint("members", __name__)
@@ -224,3 +228,76 @@ async def reset_password(data: ResetPasswordData) -> ResponseReturnValue:
             {},
         )
     return {}
+
+
+@dataclass
+class TOTPData:
+    state: Literal["ACTIVE", "PARTIAL", "INACTIVE"]
+    totp_uri: str | None
+
+
+@blueprint.get("/members/mfa/")
+@rate_limit(10, timedelta(seconds=10))
+@login_required
+@validate_response(TOTPData)
+async def get_mfa_status() -> TOTPData:
+    member_id = int(cast(str, current_user.auth_id))
+    member = await select_member_by_id(g.connection, member_id)
+    assert member is not None  # nosec
+    totp_uri = None
+
+    state: Literal["ACTIVE", "PARTIAL", "INACTIVE"]
+    if member.totp_secret is None:
+        state = "INACTIVE"
+    elif member.totp_secret is not None and member.last_totp is None:
+        totp_uri = TOTP(member.totp_secret).provisioning_uri(
+            member.email, issuer_name="Tozo"
+        )
+        state = "PARTIAL"
+    else:
+        state = "ACTIVE"
+
+    return TOTPData(state=state, totp_uri=totp_uri)
+
+
+@blueprint.post("/members/mfa/")
+@rate_limit(10, timedelta(seconds=10))
+@login_required
+@validate_response(TOTPData)
+async def initiate_mfa() -> TOTPData:
+    member_id = int(cast(str, current_user.auth_id))
+    member = await select_member_by_id(g.connection, member_id)
+    assert member is not None  # nosec
+
+    if member.totp_secret is not None:
+        raise APIError(409, "ALREADY_ACTIVE")
+
+    totp_secret = random_base32()
+    totp_uri = TOTP(totp_secret).provisioning_uri(member.email, issuer_name="Tozo")
+    await update_totp_secret(g.connection, member_id, totp_secret)
+    return TOTPData(state="PARTIAL", totp_uri=totp_uri)
+
+
+@dataclass
+class TOTPToken:
+    token: str
+
+
+@blueprint.put("/members/mfa/")
+@rate_limit(10, timedelta(seconds=10))
+@login_required
+@validate_request(TOTPToken)
+async def confirm_mfa(data: TOTPToken) -> ResponseReturnValue:
+    member_id = int(cast(str, current_user.auth_id))
+    member = await select_member_by_id(g.connection, member_id)
+    assert member is not None  # nosec
+
+    if member.totp_secret is None:
+        raise APIError(409, "NOT_ACTIVE")
+
+    totp = TOTP(member.totp_secret)
+    if totp.verify(data.token):
+        await update_last_totp(g.connection, member_id, data.token)
+        return {}
+    else:
+        raise APIError(400, "INVALID_TOKEN")

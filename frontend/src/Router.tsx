@@ -9,6 +9,7 @@ import CreateTodo from "src/pages/CreateTodo";
 import EditTodo from "src/pages/EditTodo";
 import ForgottenPassword from "src/pages/ForgottenPassword";
 import Login from "src/pages/Login";
+import MFA from "src/pages/MFA";
 import Register from "src/pages/Register";
 import ResetPassword from "src/pages/ResetPassword";
 import Todos from "src/pages/Todos";
@@ -56,6 +57,14 @@ const Router = () => (
         element={
           <RequireAuth>
             <EditTodo />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/mfa/"
+        element={
+          <RequireAuth>
+            <MFA />
           </RequireAuth>
         }
       />

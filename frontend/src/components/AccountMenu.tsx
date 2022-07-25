@@ -50,6 +50,9 @@ const AccountMenu = () => {
         <MenuItem component={Link} onClick={onMenuClose} to="/change-password/">
           Change password
         </MenuItem>
+        <MenuItem component={Link} onClick={onMenuClose} to="/mfa/">
+          MFA
+        </MenuItem>
         <Divider />
         <MenuItem
           onClick={() => {
