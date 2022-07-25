@@ -16,6 +16,7 @@ dependencies = [
     "quart-schema>=0.12.0",
     "quart-db>=0.2.0",
     "httpx>=0.23.0",
+    "disposable-email-domains>=0.0.79",
 ]
 requires-python = ">=3.10"
 license = {text = "Private"}

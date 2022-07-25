@@ -108,6 +108,11 @@ requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 summary = "Cross-platform colored terminal text."
 
 [[package]]
+name = "disposable-email-domains"
+version = "0.0.79"
+summary = "A set of disposable email domains"
+
+[[package]]
 name = "djhtml"
 version = "1.5.2"
 summary = "Django/Jinja template indenter"
@@ -581,7 +586,7 @@ summary = ""
 
 [metadata]
 lock_version = "4.0"
-content_hash = "sha256:0b33b382b8b7419aaadda7348cc94c35f9ae7993d2ebf387d4cdc21c264d45db"
+content_hash = "sha256:eee9df00d7bded284f671b1308df5969e2cef29f93764b4804e89d1fa1d1b44e"
 
 [metadata.files]
 "aiofiles 0.8.0" = [
@@ -780,6 +785,10 @@ content_hash = "sha256:0b33b382b8b7419aaadda7348cc94c35f9ae7993d2ebf387d4cdc21c2
 "colorama 0.4.5" = [
     {url = "https://files.pythonhosted.org/packages/2b/65/24d033a9325ce42ccbfa3ca2d0866c7e89cc68e5b9d92ecaba9feef631df/colorama-0.4.5.tar.gz", hash = "sha256:e6c6b4334fc50988a639d9b98aa429a0b57da6e17b9a44f0451f930b6967b7a4"},
     {url = "https://files.pythonhosted.org/packages/77/8b/7550e87b2d308a1b711725dfaddc19c695f8c5fa413c640b2be01662f4e6/colorama-0.4.5-py2.py3-none-any.whl", hash = "sha256:854bf444933e37f5824ae7bfc1e98d5bce2ebe4160d46b5edf346a89358e99da"},
+]
+"disposable-email-domains 0.0.79" = [
+    {url = "https://files.pythonhosted.org/packages/9a/4a/bd73df7249ff7ae67c9de0dbb654c1909ce3e73678a9365eb57a46bbc671/disposable_email_domains-0.0.79-py2.py3-none-any.whl", hash = "sha256:893ebd1076581c30dd3c19e104f83f0866200a1e9efdb6e4824e98a0811cfe32"},
+    {url = "https://files.pythonhosted.org/packages/f9/1e/55909cce3bb78b040b0e9860f271860200f382e6746c115b9f4405cfcc24/disposable-email-domains-0.0.79.tar.gz", hash = "sha256:575dc0247355b153f0b092b70bd49f26d89d4d0b3eb555eb6be7988213eed1e7"},
 ]
 "djhtml 1.5.2" = [
     {url = "https://files.pythonhosted.org/packages/26/8f/b838a00b9fa0033c210e5fddb43d41ac3f500decf840e6b251ea18c3da6e/djhtml-1.5.2.tar.gz", hash = "sha256:b54c4ab6effaf3dbe87d616ba30304f1dba22f07127a563df4130a71acc290ea"},

@@ -35,6 +35,11 @@ const useRegister = () => {
         error.response?.data.code === "WEAK_PASSWORD"
       ) {
         setFieldError("password", "Password is too weak");
+      } else if (
+        error.response?.status === 400 &&
+        error.response?.data.code === "INVALID_DOMAIN"
+      ) {
+        setFieldError("email", "Invalid email domain");
       } else {
         addToast("Try again", "error");
       }

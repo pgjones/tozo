@@ -4,6 +4,7 @@ from typing import cast
 
 import asyncpg  # type: ignore
 import bcrypt
+from disposable_email_domains import blocklist  # type: ignore
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 from pydantic import EmailStr
 from quart import Blueprint, ResponseReturnValue, current_app, g
@@ -45,6 +46,10 @@ async def register(data: MemberData) -> ResponseReturnValue:
 
     This allows a Member to be created.
     """
+    email_domain = data.email.split("@", 1)[1]
+    if email_domain in blocklist:
+        raise APIError(400, "INVALID_DOMAIN")
+
     strength = zxcvbn(data.password)
     if strength["score"] < MINIMUM_STRENGTH:
         raise APIError(400, "WEAK_PASSWORD")
