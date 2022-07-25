@@ -25,6 +25,8 @@ RUN pip install --no-cache-dir pdm
 COPY backend/pdm.lock backend/pyproject.toml /app/
 RUN pdm install --prod --no-lock --no-editable
 
+COPY --from=frontend /frontend/build/*.js* /app/backend/static/
+COPY --from=frontend /frontend/build/*.png /frontend/build/*.svg /app/backend/static/
 COPY --from=frontend /frontend/build/index.html \
     /app/backend/templates/
 COPY --from=frontend /frontend/build/static/. /app/backend/static/
