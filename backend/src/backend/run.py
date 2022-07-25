@@ -3,11 +3,12 @@ import os
 from subprocess import call  # nosec
 from urllib.parse import urlparse
 
-from quart import Quart, ResponseReturnValue
+from quart import Quart, Response, ResponseReturnValue
 from quart_auth import AuthManager
 from quart_db import QuartDB
 from quart_rate_limiter import RateLimiter, RateLimitExceeded
 from quart_schema import QuartSchema, RequestSchemaValidationError
+from werkzeug.http import COOP
 
 from backend.blueprints.control import blueprint as control_blueprint
 from backend.blueprints.members import blueprint as members_blueprint
@@ -93,3 +94,19 @@ def recreate_db() -> None:
             f"CREATE DATABASE {db_url.path.removeprefix('/')}",
         ],
     )
+
+
+@app.after_request
+async def add_headers(response: Response) -> Response:
+    response.content_security_policy.default_src = "'self'"
+    response.content_security_policy.connect_src = "'self' *.sentry.io"
+    response.content_security_policy.frame_ancestors = "'none'"
+    response.content_security_policy.style_src = "'self' 'unsafe-inline'"
+    response.cross_origin_opener_policy = COOP.SAME_ORIGIN
+    response.headers["Referrer-Policy"] = "no-referrer, strict-origin-when-cross-origin"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers[
+        "Strict-Transport-Security"
+    ] = "max-age=63072000; includeSubDomains; preload"
+    return response
