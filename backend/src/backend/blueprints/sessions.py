@@ -13,6 +13,8 @@ from backend.models.member import select_member_by_email
 
 blueprint = Blueprint("sessions", __name__)
 
+REFERENCE_HASH = "$2b$12$A.BRD7hCbGciBiqNRTqxZ.odBxGo.XmRmgN4u9Jq7VUkW9xRmPxK."
+
 
 @dataclass
 class LoginData:
@@ -30,14 +32,15 @@ async def login(data: LoginData) -> ResponseReturnValue:
     By providing credentials and then saving the returned cookie.
     """
     result = await select_member_by_email(g.connection, data.email)
-    if result is None:
-        raise APIError(401, "INVALID_CREDENTIALS")
+    password_hash = REFERENCE_HASH
+    if result is not None:
+        password_hash = result.password_hash
 
     passwords_match = bcrypt.checkpw(
         data.password.encode("utf-8"),
-        result.password_hash.encode("utf-8"),
+        password_hash.encode("utf-8"),
     )
-    if passwords_match:
+    if passwords_match and result is not None:
         login_user(AuthUser(str(result.id)), data.remember)
         return {}, 200
     else:
