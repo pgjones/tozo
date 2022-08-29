@@ -1,0 +1,13 @@
+To encrypt and decrypt the secrets `ansible-vault` must be installed:
+
+    pip install ansible-vault
+
+Then to decrypt the secrets:
+
+ansible-vault decrypt secrets.auto.tfvars.vault --output=secrets.auto.tfvars
+ansible-vault decrypt terraform.tfstate.vault --output=terraform.tfstate
+
+Once changed, to encrypt:
+
+ansible-vault encrypt secrets.auto.tfvars --output=secrets.auto.tfvars.vault
+ansible-vault encrypt terraform.tfstate --output=terraform.tfstate.vault
