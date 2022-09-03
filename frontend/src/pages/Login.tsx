@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router";
 import * as yup from "yup";
 
 import { AuthContext } from "src/AuthContext";
+import BookIntro from "src/components/BookIntro";
 import EmailField from "src/components/EmailField";
 import FormActions from "src/components/FormActions";
 import PasswordField from "src/components/PasswordField";
@@ -120,6 +121,7 @@ const Login = () => {
           </Form>
         )}
       </Formik>
+      <BookIntro />
     </>
   );
 };

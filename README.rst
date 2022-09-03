@@ -11,6 +11,6 @@ This repository is live, everything works and can be used at `tozo.dev
 Please open issues for questions, or try me on Twitter I'm `@pdgjones
 <https://twitter.com/pdgjones>`_.
 
-.. image:: https://github.com/pgjones/tozo/raw/main/Cover.jpg
+.. image:: https://github.com/pgjones/tozo/raw/main/backend/src/backend/static/Cover.jpg
    :width: 400
    :alt: Book Cover
