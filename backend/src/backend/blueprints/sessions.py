@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import timedelta
 
 import bcrypt
-from pydantic import EmailStr
+from pydantic import EmailStr, SecretStr
 from pyotp.totp import TOTP
 from quart import Blueprint, ResponseReturnValue, g
 from quart_auth import AuthUser, current_user, login_required, login_user, logout_user
@@ -20,7 +20,7 @@ REFERENCE_HASH = "$2b$12$A.BRD7hCbGciBiqNRTqxZ.odBxGo.XmRmgN4u9Jq7VUkW9xRmPxK."
 @dataclass
 class LoginData:
     email: EmailStr
-    password: str
+    password: SecretStr
     remember: bool = False
     token: str | None = None
 
@@ -35,7 +35,7 @@ async def login(data: LoginData) -> ResponseReturnValue:
         password_hash = member.password_hash
 
     passwords_match = bcrypt.checkpw(
-        data.password.encode("utf-8"),
+        data.password.get_secret_value().encode("utf-8"),
         password_hash.encode("utf-8"),
     )
     if passwords_match:

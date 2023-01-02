@@ -6,7 +6,7 @@ import asyncpg  # type: ignore
 import bcrypt
 from disposable_email_domains import blocklist  # type: ignore
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
-from pydantic import EmailStr
+from pydantic import EmailStr, SecretStr
 from pyotp import random_base32
 from pyotp.totp import TOTP
 from quart import Blueprint, ResponseReturnValue, current_app, g
@@ -39,7 +39,7 @@ ONE_DAY = int(timedelta(hours=24).total_seconds())
 @dataclass
 class MemberData:
     email: str
-    password: str
+    password: SecretStr
 
 
 @blueprint.post("/members/")
@@ -54,12 +54,12 @@ async def register(data: MemberData) -> ResponseReturnValue:
     if email_domain in blocklist:
         raise APIError(400, "INVALID_DOMAIN")
 
-    strength = zxcvbn(data.password)
+    strength = zxcvbn(data.password.get_secret_value())
     if strength["score"] < MINIMUM_STRENGTH:
         raise APIError(400, "WEAK_PASSWORD")
 
     hashed_password = bcrypt.hashpw(
-        data.password.encode("utf-8"),
+        data.password.get_secret_value().encode("utf-8"),
         bcrypt.gensalt(14),
     )
     try:
@@ -114,8 +114,8 @@ async def verify_email(data: TokenData) -> ResponseReturnValue:
 
 @dataclass
 class PasswordData:
-    current_password: str
-    new_password: str
+    current_password: SecretStr
+    new_password: SecretStr
 
 
 @blueprint.put("/members/password/")
@@ -127,7 +127,7 @@ async def change_password(data: PasswordData) -> ResponseReturnValue:
 
     This allows the user to update their password.
     """
-    strength = zxcvbn(data.new_password)
+    strength = zxcvbn(data.new_password.get_secret_value())
     if strength["score"] < MINIMUM_STRENGTH:
         raise APIError(400, "WEAK_PASSWORD")
 
@@ -135,14 +135,14 @@ async def change_password(data: PasswordData) -> ResponseReturnValue:
     member = await select_member_by_id(g.connection, member_id)
     assert member is not None  # nosec
     passwords_match = bcrypt.checkpw(
-        data.current_password.encode("utf-8"),
+        data.current_password.get_secret_value().encode("utf-8"),
         member.password_hash.encode("utf-8"),
     )
     if not passwords_match:
         raise APIError(401, "INVALID_PASSWORD")
 
     hashed_password = bcrypt.hashpw(
-        data.new_password.encode("utf-8"),
+        data.new_password.get_secret_value().encode("utf-8"),
         bcrypt.gensalt(14),
     )
     await update_member_password(g.connection, member_id, hashed_password.decode())
