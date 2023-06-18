@@ -9,6 +9,7 @@ provider "github" {
 resource "github_repository" "tozo" {
   name       = "tozo"
   visibility = "public"
+  has_issues = true
 }
 
 resource "github_actions_secret" "debt_aws_access_key" {
