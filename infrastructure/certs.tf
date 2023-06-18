@@ -16,10 +16,11 @@ resource "acme_certificate" "tozo_dev" {
   common_name     = "tozo.dev"
 
   dns_challenge {
-    provider = "gandiv5"
+    provider = "cloudflare"
 
     config = {
-      GANDIV5_API_KEY = var.gandi_api_key
+      CF_API_EMAIL = "philip.graham.jones@googlemail.com"
+      CF_API_KEY   = var.cloudflare_api_token
     }
   }
 }

@@ -8,9 +8,8 @@ terraform {
       source  = "hashicorp/aws"
       version = ">=3.35.0"
     }
-    gandi = {
-      source  = "go-gandi/gandi"
-      version = "~> 2.0.0"
+    cloudflare = {
+      source = "cloudflare/cloudflare"
     }
     github = {
       source  = "integrations/github"
