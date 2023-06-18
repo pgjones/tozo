@@ -51,7 +51,7 @@ const useResetPassword = () => {
 };
 
 const validationSchema = yup.object({
-  email: yup.string().email("Email invalid").required("Required"),
+  password: yup.string().required("Required"),
 });
 
 const ResetPassword = () => {
