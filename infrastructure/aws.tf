@@ -23,7 +23,7 @@ resource "aws_db_instance" "tozo" {
   db_subnet_group_name    = aws_db_subnet_group.default.name
   deletion_protection     = true
   engine                  = "postgres"
-  engine_version          = "14"
+  engine_version          = "15"
   instance_class          = "db.t3.micro"
   db_name                 = "tozo"
   username                = "tozo"
