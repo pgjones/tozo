@@ -1,16 +1,16 @@
 terraform {
   required_providers {
     acme = {
-      source  = "vancluever/acme"
+      source = "vancluever/acme"
     }
     aws = {
-      source  = "hashicorp/aws"
+      source = "hashicorp/aws"
     }
     cloudflare = {
       source = "cloudflare/cloudflare"
     }
     github = {
-      source  = "integrations/github"
+      source = "integrations/github"
     }
   }
   required_version = ">=1.0"
