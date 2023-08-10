@@ -19,8 +19,8 @@ resource "acme_certificate" "tozo_dev" {
     provider = "cloudflare"
 
     config = {
-      CF_API_EMAIL = "philip.graham.jones@googlemail.com"
-      CF_API_KEY   = var.cloudflare_api_token
+      CF_API_EMAIL     = "philip.graham.jones@googlemail.com"
+      CF_DNS_API_TOKEN = var.cloudflare_api_token
     }
   }
 }
