@@ -94,6 +94,17 @@ def recreate_db() -> None:
             f"CREATE DATABASE {db_url.path.removeprefix('/')}",
         ],
     )
+    call(  # nosec
+        [
+            "psql",
+            "-U",
+            "postgres",
+            "-d",
+            f"{db_url.path.removeprefix('/')}",
+            "-c",
+            f"GRANT ALL ON SCHEMA public TO {db_url.username}",
+        ],
+    )
 
 
 @app.after_request
