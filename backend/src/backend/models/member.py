@@ -45,6 +45,7 @@ async def insert_member(db: Connection, email: str, password_hash: str) -> Membe
                        email_verified, last_totp, totp_secret""",
         {"email": email, "password_hash": password_hash},
     )
+    assert result is not None  # nosec
     return Member(**result)
 
 

@@ -1,6 +1,6 @@
 /__pypackages__
 /.mypy_cache
-.pdm.toml
+.pdm-python
 .pytest_cache
 .venv
 *.pyc

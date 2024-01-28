@@ -2,6 +2,7 @@ import pytest
 from freezegun import freeze_time
 from itsdangerous import URLSafeTimedSerializer
 from quart import Quart
+from quart_auth import authenticated_client
 
 from backend.blueprints.members import EMAIL_VERIFICATION_SALT
 
@@ -24,7 +25,9 @@ async def test_register(app: Quart, caplog: pytest.LogCaptureFixture) -> None:
 )
 async def test_verify_email(app: Quart, time: str | None, expected: int) -> None:
     with freeze_time(time):
-        signer = URLSafeTimedSerializer(app.secret_key, salt=EMAIL_VERIFICATION_SALT)
+        signer = URLSafeTimedSerializer(
+            app.secret_key, salt=EMAIL_VERIFICATION_SALT  # type: ignore
+        )
         token = signer.dumps(1)
     test_client = app.test_client()
     response = await test_client.put("/members/email/", json={"token": token})
@@ -44,7 +47,7 @@ async def test_change_password(app: Quart, caplog: pytest.LogCaptureFixture) -> 
         "password": "testPassword2$",
     }
     response = await test_client.post("/members/", json=data)
-    async with test_client.authenticated("2"):  # type: ignore
+    async with authenticated_client(test_client, "2"):
         response = await test_client.put(
             "/members/password/",
             json={

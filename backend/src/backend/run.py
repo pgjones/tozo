@@ -4,7 +4,7 @@ from subprocess import call  # nosec
 from urllib.parse import urlparse
 
 from quart import Quart, Response, ResponseReturnValue
-from quart_auth import AuthManager
+from quart_auth import QuartAuth
 from quart_db import QuartDB
 from quart_rate_limiter import RateLimiter, RateLimitExceeded
 from quart_schema import QuartSchema, RequestSchemaValidationError
@@ -22,7 +22,7 @@ logging.basicConfig(level=logging.INFO)
 app = Quart(__name__)
 app.config.from_prefixed_env(prefix="TOZO")
 
-auth_manager = AuthManager(app)
+auth_manager = QuartAuth(app)
 quart_db = QuartDB(app)
 rate_limiter = RateLimiter(app)
 schema = QuartSchema(app, convert_casing=True)
@@ -48,17 +48,14 @@ async def handle_generic_error(error: Exception) -> ResponseReturnValue:
 async def handle_rate_limit_exceeded_error(
     error: RateLimitExceeded,
 ) -> ResponseReturnValue:
-    return {}, error.get_headers(), 429
+    return {}, 429, error.get_headers()
 
 
 @app.errorhandler(RequestSchemaValidationError)  # type: ignore
 async def handle_request_validation_error(
     error: RequestSchemaValidationError,
 ) -> ResponseReturnValue:
-    if isinstance(error.validation_error, TypeError):
-        return {"errors": str(error.validation_error)}, 400
-    else:
-        return {"errors": error.validation_error.json()}, 400
+    return {"errors": str(error.validation_error)}, 400
 
 
 @app.cli.command("recreate_db")
@@ -117,7 +114,7 @@ async def add_headers(response: Response) -> Response:
     response.headers["Referrer-Policy"] = "no-referrer, strict-origin-when-cross-origin"
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "SAMEORIGIN"
-    response.headers[
-        "Strict-Transport-Security"
-    ] = "max-age=63072000; includeSubDomains; preload"
+    response.headers["Strict-Transport-Security"] = (
+        "max-age=63072000; includeSubDomains; preload"
+    )
     return response

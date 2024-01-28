@@ -72,7 +72,7 @@ async def register(data: MemberData) -> ResponseReturnValue:
         pass
     else:
         serializer = URLSafeTimedSerializer(
-            current_app.secret_key, salt=EMAIL_VERIFICATION_SALT
+            current_app.secret_key, salt=EMAIL_VERIFICATION_SALT  # type: ignore
         )
         token = serializer.dumps(member.id)
         await send_email(
@@ -99,7 +99,7 @@ async def verify_email(data: TokenData) -> ResponseReturnValue:
     This requires the user to supply a valid token.
     """
     serializer = URLSafeTimedSerializer(
-        current_app.secret_key, salt=EMAIL_VERIFICATION_SALT
+        current_app.secret_key, salt=EMAIL_VERIFICATION_SALT  # type: ignore
     )
     try:
         member_id = serializer.loads(data.token, max_age=ONE_MONTH)
@@ -171,7 +171,7 @@ async def forgotten_password(data: ForgottenPasswordData) -> ResponseReturnValue
     member = await select_member_by_email(g.connection, data.email)
     if member is not None:
         serializer = URLSafeTimedSerializer(
-            current_app.secret_key, salt=FORGOTTEN_PASSWORD_SALT
+            current_app.secret_key, salt=FORGOTTEN_PASSWORD_SALT  # type: ignore
         )
         token = serializer.dumps(member.id)
         await send_email(
@@ -199,7 +199,7 @@ async def reset_password(data: ResetPasswordData) -> ResponseReturnValue:
     new password.
     """
     serializer = URLSafeTimedSerializer(
-        current_app.secret_key, salt=FORGOTTEN_PASSWORD_SALT
+        current_app.secret_key, salt=FORGOTTEN_PASSWORD_SALT  # type: ignore
     )
     try:
         member_id = serializer.loads(data.token, max_age=ONE_DAY)

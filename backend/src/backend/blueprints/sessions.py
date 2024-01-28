@@ -76,6 +76,6 @@ class Status:
 @rate_limit(10, timedelta(minutes=1))
 @login_required
 @validate_response(Status)
-async def status() -> ResponseReturnValue:
+async def status() -> Status:
     assert current_user.auth_id is not None  # nosec
     return Status(member_id=int(current_user.auth_id))

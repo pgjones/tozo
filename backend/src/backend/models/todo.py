@@ -64,6 +64,7 @@ async def insert_todo(
             "due": due,
         },
     )
+    assert result is not None  # nosec
     return Todo(**result)
 
 

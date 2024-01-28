@@ -5,7 +5,7 @@ from quart_rate_limiter import (
 
 from backend.run import app
 
-IGNORED_ENDPOINTS = {"static", "openapi", "redoc_ui", "swagger_ui"}
+IGNORED_ENDPOINTS = {"static", "openapi", "redoc_ui", "scalar_ui", "swagger_ui"}
 
 
 def test_routes_have_rate_limits() -> None:
