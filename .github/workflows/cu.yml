@@ -1,0 +1,51 @@
+name: CU
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - uses: actions/checkout@v4
+
+      - name: Checkout branch
+        run: git checkout -b update
+
+      - name: Update dependencies
+        run: npm update
+
+      - name: Configure git
+        run: |
+          git config --global user.name "bot"
+          git config --global user.email "bot@tozo.dev"
+
+      - name: Commit
+        run: |
+          git commit -a -m "Automated update"
+          git push origin update
+
+      - name: Create PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { repo, owner } = context.repo;
+            await github.rest.pulls.create({
+              title: 'Automated update',
+              owner,
+              repo,
+              head: 'update',
+              base: 'main',
+              body: 'Automatic update',
+            });
